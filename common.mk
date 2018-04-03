@@ -188,13 +188,8 @@ PRODUCT_PACKAGES += \
     init.qcom.rc \
     init.power.rc \
     init.class_main.sh \
-    init.qcom.early_boot.sh \
-    init.qcom.post_boot.sh \
-    init.qcom.sensors.sh \
-    init.qcom.sh \
     init.qti.qseecomd.sh \
     ueventd.qcom.rc \
-    move_time_data.sh \
     wlan_carrier_bin.sh
 
 # IPACM

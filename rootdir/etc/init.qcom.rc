@@ -491,6 +491,15 @@ on post-fs-data
     # Create the directories used by WiGig Sensing
     mkdir /data/vendor/sensing 0770 system wifi
 
+    # Setup sensors-related directories and permissions
+    mkdir /persist/sensors 0775
+    chown root system /persist/sensors
+    write /persist/sensors/sensors_settings 1
+    chown root system /persist/sensors/sensors_settings
+    chmod 664 /persist/sensors/sensors_settings
+    chown root system /persist/sensors/sns.reg
+    chmod 664 /persist/sensors/sns.reg
+
     # Create the directories used by CnE subsystem
     mkdir /data/vendor/connectivity 0771 radio radio
     chown radio radio /data/vendor/connectivity
@@ -718,9 +727,6 @@ on post-fs-data
     mkdir /data/tombstones/wcnss 0771 system system
     mkdir /data/tombstones/dsps 0771 system system
 
-    #Start move time data to /data/vendor once post-fs-data done
-    start vendor.move_time_data
-
     setprop vold.post_fs_data_done 1
 
 service nqnfcinfo /system/vendor/bin/nqnfcinfo
@@ -888,17 +894,10 @@ service ftmd /vendor/bin/ftmdaemon
     disabled
     oneshot
 
-service vendor.sensors /vendor/bin/sscrpcd sensorspd
-    class early_hal
-    user system
-    group system wakelock
-    capabilities BLOCK_SUSPEND
-
 service vendor.sensors.qti /vendor/bin/sensors.qti
     class core
     user system
     group system
-    disabled
 
 # Adjust socket buffer to enlarge TCP receive window for high bandwidth
 # but only if ro.data.large_tcp_window_size property is set.
@@ -1018,33 +1017,6 @@ on property:crypto.driver.load=1
 
 #on property:drmdiag.load=0
 #    stop vendor.drmdiag
-
-service qcom-sh /vendor/bin/init.qcom.sh
-    class late_start
-    user root
-    group root system radio
-    oneshot
-
-service vendor-sensor-sh /vendor/bin/init.qcom.sensors.sh
-    class core
-    user root
-    oneshot
-
-service vendor-qcom-power /vendor/bin/init.qcom.power.sh
-    class main
-    user root
-    disabled
-    oneshot
-
-service qcom-post-boot /vendor/bin/init.qcom.post_boot.sh
-    class late_start
-    user root
-    group root system wakelock graphics
-    disabled
-    oneshot
-
-on property:sys.boot_completed=1
-    start qcom-post-boot
 
 on property:ro.vendor.ril.mbn_copy_completed=1
     write /data/vendor/radio/copy_complete 1
@@ -1169,13 +1141,6 @@ service vendor.seemp_healthd /vendor/bin/seemp_healthd
 
 service vendor.power_off_alarm /vendor/bin/power_off_alarm
     class core
-    group system
-    disabled
-    oneshot
-
-service vendor.move_time_data /system/bin/move_time_data.sh
-    class main
-    user system
     group system
     disabled
     oneshot
