@@ -1,0 +1,1 @@
+allow rmt_storage unlabeled:file { open  read };

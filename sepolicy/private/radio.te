@@ -1,0 +1,5 @@
+allow radio gpu_service:service_manager { find };
+allow radio gpuservice:binder { call };
+allow radio sysfs_kgsl:dir { search };
+allow radio sysfs_kgsl:lnk_file { read };
+allow radio system_app_data_file:dir { getattr };

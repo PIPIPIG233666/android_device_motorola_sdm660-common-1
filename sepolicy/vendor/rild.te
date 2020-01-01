@@ -8,3 +8,5 @@ allow rild mnt_vendor_file:file rw_file_perms;
 allow rild proc:file r_file_perms;
 allow rild vendor_default_prop:property_service set;
 get_prop(rild, moto_boot_prop)
+allow rild vendor_data_file:dir { add_name  write };
+allow rild vendor_data_file:sock_file { create  write };

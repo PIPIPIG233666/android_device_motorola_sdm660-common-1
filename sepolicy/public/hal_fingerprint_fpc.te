@@ -1,0 +1,1 @@
+allow hal_fingerprint_fpc default_android_hwservice:hwservice_manager { add };

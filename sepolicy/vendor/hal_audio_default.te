@@ -1,2 +1,2 @@
 unix_socket_connect(hal_audio_default, perfd, perfd)
-allow hal_audio_default default_android_hwservice:hwservice_manager { find };
+allow hal_audio_default sysfs:dir { open  read };
